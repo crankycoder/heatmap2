@@ -1,7 +1,7 @@
 "use strict";
 
 function startup({webExtension}) {
-  Components.utils.import("chrome://original-bootstrap-addon-id/content/AddonPrefs.jsm");
+  Components.utils.import("chrome://eventbus-id/content/AddonPrefs.jsm");
 
   // Start the embedded webextension.
   webExtension.startup().then(api => {
@@ -20,5 +20,5 @@ function startup({webExtension}) {
 }
 
 function shutdown(data) {
-  Components.utils.unload("chrome://original-bootstrap-addon-id/content/AddonPrefs.jsm");
+  Components.utils.unload("chrome://eventbus-id/content/AddonPrefs.jsm");
 }
