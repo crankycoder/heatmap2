@@ -1,15 +1,30 @@
-{
-  "name": "Legacy Addon Name",
-  "version": "0.2.0",
-  "manifest_version": 2,
-  "permissions": ["storage"],
-  "background": {
-    "scripts": ["background.js"]
+{ "manifest_version": 2,
+  "name": "heatmap",
+  "version": "2.0",
+
+  "description": "Mozilla Heatmap",
+  "icons": {
+    "16": "icons/icon-16.png",
+    "32": "icons/icon-32.png",
+    "64": "icons/icon-64.png"
   },
-  "browser_action": {
-    "browser_style": true,
-    "default_icon": "icons/icon-32.png",
-    "default_title": "button label",
-    "default_popup": "popup.html"
-  }
+  "content_scripts": [
+    {
+      "matches": ["*://*/*"],
+      "js": ["content_script.js"]
+    }
+  ],
+  "background": {
+      "scripts": ["background-script.js",
+                  "events.js",
+                  "jose.js",
+                  "networking.js",
+                  "cache-lru.js"]
+  },
+  "permissions": ["webRequest", "<all_urls>",
+                  "cookies","<all_urls>",
+                  "webNavigation","<all_urls>",
+                  // Firefox doesn't support the geolocation permission yet
+                  // "geolocation",
+                  "tabs"]
 }

@@ -1,0 +1,21 @@
+{
+  "name": "heatmap-webext",
+  "version": "1.0.0",
+  "description": "The heatmap webextension is roughly composed of 2 parts.",
+  "main": "background-script.js",
+  "directories": {
+    "test": "tests"
+  },
+  "dependencies": {
+    "eslint": "^3.14.0"
+  },
+  "devDependencies": {
+    "eslint": "^3.15.0",
+    "eslint-config-google": "^0.7.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Victor Ng <victor@crankycoder.com>",
+  "license": "ISC"
+}

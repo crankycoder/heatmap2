@@ -1,24 +1,35 @@
 "use strict";
 
-function startup({webExtension}) {
-  Components.utils.import("chrome://eventbus-id/content/AddonPrefs.jsm");
+function install(data, reason) {
+    console.log("Install: " + reason);
 
-  // Start the embedded webextension.
-  webExtension.startup().then(api => {
-    const {browser} = api;
-    browser.runtime.onMessage.addListener((msg, sender, sendReply) => {
-      if (msg == "import-legacy-data") {
-        // When the embedded webextension asks for the legacy data,
-        // dump the data which needs to be preserved and send it back to the
-        // embedded extension.
-        sendReply({
-          "super-important-user-setting": AddonPrefs.get("super-important-user-setting"),
-        });
-      }
-    });
-  });
 }
 
-function shutdown(data) {
-  Components.utils.unload("chrome://eventbus-id/content/AddonPrefs.jsm");
+function startup({webExtension}, reason) {
+    console.log("Startup: " + reason);
+    Components.utils.import("resource://gre/modules/TelemetryController.jsm");
+
+    // Start the embedded webextension.
+    webExtension.startup().then(api => {
+        const {browser} = api;
+        browser.runtime.onMessage.addListener((msg, sender, sendReply) => {
+            if (msg && msg.type == "contextgraph-heatmap") {
+                // When the embedded webextension asks for the legacy data,
+                // dump the data which needs to be preserved and send it back to the
+                // embedded extension.
+
+                TelemetryController.submitExternalPing("contextgraph-heatmap",
+                                                        msg.payload);
+            }
+        });
+    });
+}
+
+function shutdown(data, reason) {
+    console.log("Shutdown: " + reason);
+}
+
+
+function uninstall(data, reason) {
+    console.log("Uninstall: " + reason);
 }
