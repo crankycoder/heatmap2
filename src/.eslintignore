@@ -1,0 +1,5 @@
+!.eslintrc.js
+webextension/jose.js
+build
+dist
+node_modules
