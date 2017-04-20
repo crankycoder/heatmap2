@@ -1,27 +1,12 @@
 "use strict";
 
+/* eslint no-unused-vars: ["error", { "varsIgnorePattern": "uploadData|makeGUID" }] */
 // const Jose = require("./jose").Jose;
 // const JoseJWE = require("./jose").JoseJWE;
 // const CRYPTO_KEYS = require("./heatmap_consts").CRYPTO_KEYS;
 
 function uploadData(jsonData) {
-  console.log("WARNING: this needs to emit data to the telemetry backend");
-}
-
-/* We use our own custom GUID for the user.  It's unrelated to
- * anything other than the specific browser that this addon is
- * installed into.
- */
-function getUUID() {
-  // TODO: read the UUID from the preferences via messaging bootstrap.js
-  let uuid;
-  if (uuid === undefined) {
-    // Generate a UUID if we don't have a user ID yet and
-    // stuff it into prefs
-    uuid = makeGUID();
-    // TODO: save the GUID into a pref
-  }
-  return uuid;
+  console.log(`WARNING: this needs to emit data to the telemetry backend: ${jsonData}`);
 }
 
 /* Generate a URL friendly 10 character UUID.
