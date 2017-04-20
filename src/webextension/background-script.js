@@ -1,6 +1,6 @@
 /* global TabOnCreatedEvent, WebReqOnBeforeSendHeadersEvent */
 /* global TabMovedToNewWindowEvent, TabOnActivatedEvent */
-/* global WebNavOnBeforeNavigateEvent */
+/* global WebNavOnBeforeNavigateEvent, TabOnRemoveEvent */
 
 /* global browser */
 /* eslint no-unused-vars: ["error", { "varsIgnorePattern": "MESSAGE_PORT" }] */
@@ -33,6 +33,16 @@ const BrowserEventListener = function(browserModel) {
 
     let details = {tabId: tab.id, windowId: tab.windowId};
     let event = new TabOnCreatedEvent(details, this.tabs[tab.id]);
+    event.updatePageVisitModel();
+  };
+
+  this.tabsOnRemovedListener = (tabId, removeInfo) => {
+    console.log(`tabsOnRemovedListener invoked: ${JSON.stringify(removeInfo)}`);
+    // create a unique ID based on tabId, windowId and
+    // createTime
+
+    let details = {tabId, windowId: removeInfo.windowId};
+    let event = new TabOnRemoveEvent(details, this.tabs[tabId]);
     event.updatePageVisitModel();
   };
 
@@ -134,7 +144,7 @@ const BrowserEventListener = function(browserModel) {
    */
   this.webNavOnCompleted = details => {
     // TODO: we want to extract the page title
-    console.log(`webNavOnCompleted: ${details}`);
+    console.log(`webNavOnCompleted: ${JSON.stringify(details)}`);
   };
 
   /*
@@ -366,6 +376,7 @@ function registerListeners(fx) {
   bTabs.onActivated.addListener(listener.tabsOnActivatedListener);
   bTabs.onAttached.addListener(listener.tabsOnAttachedListener);
   bTabs.onCreated.addListener(listener.tabsOnCreatedListener);
+  bTabs.onRemoved.addListener(listener.tabsOnRemovedListener);
 
   console.log("Completed registering bTabs");
 

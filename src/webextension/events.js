@@ -36,6 +36,7 @@ function BaseEvent(eventDetails, oldPageModel) {
 BaseEvent.prototype = {};
 
 function WebNavOnBeforeNavigateEvent(details, oldPageModel) {
+  // Invoke the constructor of BaseEvent
   BaseEvent.call(this, details, oldPageModel);
 
   // Each event must expose a tabId attribute
@@ -110,6 +111,20 @@ TabOnCreatedEvent.prototype = Object.create(BaseEvent.prototype, {
      // it's not necessarily related to web navigation.  Maybe it's
      // interesting if the user has activity stream installed
      // though?
+    return null;
+  }
+});
+
+const TabOnRemoveEvent = function(details, oldPageModel) {
+  BaseEvent.call(this, details, oldPageModel);
+
+  this.tabId = this.eventDetails.tabId;
+  this.windowId = this.eventDetails.windowId;
+};
+
+TabOnRemoveEvent.prototype = Object.create(BaseEvent.prototype, {
+  updatePageVisitModel() {
+    console.log("TODO: Need to determine what to do with a tab close event");
     return null;
   }
 });
