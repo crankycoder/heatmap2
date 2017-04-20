@@ -1,6 +1,6 @@
 all:
 	mkdir -p dist
-	rm -f dist/eventbus.xpi
+	rm -rf dist/eventbus.xpi node_modules
 	zip -r dist/eventbus.xpi .
 
 lint:
