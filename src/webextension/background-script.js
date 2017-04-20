@@ -131,10 +131,11 @@ const BrowserEventListener = function(browserModel) {
   /*
    * This is triggered whenever a DOM is completely loaded. Probably
    * not entirely useful.
+   */
   this.webNavOnCompleted = details => {
     // TODO: we want to extract the page title
+    console.log(`webNavOnCompleted: ${details}`);
   };
-   */
 
   /*
    * This is triggered at the very start of the navigation. Use this
@@ -353,9 +354,9 @@ function portConnected(p) {
 /* We directly wire in listeners in the BrowserEventListener
  */
 function registerListeners(fx) {
+  console.log("Registering listeners");
   let listener = fx.getListener();
 
-  let bBAction = browser.browserAction;
   let bRt = browser.runtime;
   let bTabs = browser.tabs;
   let bWebNav = browser.webNavigation;
@@ -366,17 +367,17 @@ function registerListeners(fx) {
   bTabs.onAttached.addListener(listener.tabsOnAttachedListener);
   bTabs.onCreated.addListener(listener.tabsOnCreatedListener);
 
+  console.log("Completed registering bTabs");
+
   // Now connect the port between the background-script and the
   // content-script
   bRt.onConnect.addListener(portConnected);
-
-  bBAction.onClicked.addListener(() => {
-    MESSAGE_PORT.postMessage({greeting: "they clicked the button!"});
-  });
+  console.log("Completed registering bRt");
 
   bWebReq.onBeforeSendHeaders.addListener(listener.webReqOnBeforeSendHeaders,
     {urls: ["<all_urls>"]},
     ["requestHeaders"]);
+  console.log("Completed registering bWebReq");
 
   /*
 
@@ -394,9 +395,14 @@ function registerListeners(fx) {
 
   let navFilter = {url: [{urlMatches: "^.*$"}]};
   bWebNav.onBeforeNavigate.addListener(listener.webNavOnBeforeNavigate, navFilter);
+  console.log("Completed registering bWebNav:onBefore");
   bWebNav.onCompleted.addListener(listener.webNavOnCompleted, navFilter);
+  console.log("Completed registering bWebNav:onCompleted");
+  console.log("Completed registering bWebNav");
 
   // bWebNav.onCommitted.addListener(listener.webNavOnCommited, navFilter);
+
+  console.log("Completed registering listeners");
 }
 
 function main() {
