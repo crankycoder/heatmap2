@@ -33,7 +33,26 @@ function BaseEvent(eventDetails, oldPageModel) {
   }
 }
 
-BaseEvent.prototype = {};
+BaseEvent.prototype = {
+  updatePageVisitModel() {
+    console.log("TODO: No updatePageVisitModel() method is implemented");
+    return null;
+  }
+};
+
+function TabOnRemoveEvent(details, oldPageModel) {
+  BaseEvent.call(this, details, oldPageModel);
+
+  this.tabId = this.eventDetails.tabId;
+  this.windowId = this.eventDetails.windowId;
+}
+
+TabOnRemoveEvent.prototype = {
+  updatePageVisitModel() {
+    console.log(`tabOnRemoveEvent: tabId:${this.tabId} windowId:${this.windowId}`);
+    return null;
+  }
+};
 
 function WebNavOnBeforeNavigateEvent(details, oldPageModel) {
   // Invoke the constructor of BaseEvent
@@ -50,7 +69,7 @@ function WebNavOnBeforeNavigateEvent(details, oldPageModel) {
   this.timeStamp = this.eventDetails.timeStamp;
 }
 
-WebNavOnBeforeNavigateEvent.prototype = Object.create(BaseEvent.prototype, {
+WebNavOnBeforeNavigateEvent.prototype = {
   updatePageVisitModel() {
     let result = null;
     if (this.url !== this.oldPageModel.url) {
@@ -64,31 +83,31 @@ WebNavOnBeforeNavigateEvent.prototype = Object.create(BaseEvent.prototype, {
     }
     return result;
   }
-});
+};
 
-const TabMovedToNewWindowEvent = function(details, oldPageModel) {
+function TabMovedToNewWindowEvent(details, oldPageModel) {
   BaseEvent.call(this, details, oldPageModel);
 
   this.newTabIndex = this.eventDetails.newTabIndex;
   this.newWindowId = this.eventDetails.newWindowId;
-};
+}
 
-TabMovedToNewWindowEvent.prototype = Object.create(BaseEvent.prototype, {
+TabMovedToNewWindowEvent.prototype = {
   updatePageVisitModel() {
     this.oldPageModel.windowId = this.newWindowId;
     this.oldPageModel.tabIndex = this.newTabIndex;
     return null;
   }
-});
+};
 
-const TabOnActivatedEvent = function(details, oldPageModel) {
+function TabOnActivatedEvent(details, oldPageModel) {
   BaseEvent.call(this, details, oldPageModel);
 
   this.tabId = this.eventDetails.tabId;
   this.windowId = this.eventDetails.windowId;
-};
+}
 
-TabOnActivatedEvent.prototype = Object.create(BaseEvent.prototype, {
+TabOnActivatedEvent.prototype = {
   updatePageVisitModel() {
     // Not quite sure we have a sensible way of keeping track of
     // this.
@@ -96,16 +115,16 @@ TabOnActivatedEvent.prototype = Object.create(BaseEvent.prototype, {
     // on actual foreground tab time.
     return null;
   }
-});
+};
 
-const TabOnCreatedEvent = function(details, oldPageModel) {
+function TabOnCreatedEvent(details, oldPageModel) {
   BaseEvent.call(this, details, oldPageModel);
 
   this.tabId = this.eventDetails.tabId;
   this.windowId = this.eventDetails.windowId;
-};
+}
 
-TabOnCreatedEvent.prototype = Object.create(BaseEvent.prototype, {
+TabOnCreatedEvent.prototype = {
   updatePageVisitModel() {
      // We probably don't care about new tab creation very much as
      // it's not necessarily related to web navigation.  Maybe it's
@@ -113,23 +132,9 @@ TabOnCreatedEvent.prototype = Object.create(BaseEvent.prototype, {
      // though?
     return null;
   }
-});
-
-const TabOnRemoveEvent = function(details, oldPageModel) {
-  BaseEvent.call(this, details, oldPageModel);
-
-  this.tabId = this.eventDetails.tabId;
-  this.windowId = this.eventDetails.windowId;
 };
 
-TabOnRemoveEvent.prototype = Object.create(BaseEvent.prototype, {
-  updatePageVisitModel() {
-    console.log("TODO: Need to determine what to do with a tab close event");
-    return null;
-  }
-});
-
-const WebReqOnBeforeSendHeadersEvent = function(details, oldPageModel) {
+function WebReqOnBeforeSendHeadersEvent(details, oldPageModel) {
   BaseEvent.call(this, details, oldPageModel);
 
   // We only care about the referrer header
@@ -140,11 +145,11 @@ const WebReqOnBeforeSendHeadersEvent = function(details, oldPageModel) {
       break;
     }
   }
-};
+}
 
-WebReqOnBeforeSendHeadersEvent.prototype = Object.create(BaseEvent.prototype, {
+WebReqOnBeforeSendHeadersEvent.prototype = {
   updatePageVisitModel() {
     this.oldPageModel.referrer = this.referrer;
     return null;
   }
-});
+};
